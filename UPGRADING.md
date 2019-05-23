@@ -67,3 +67,24 @@ guide](https://docs.bugsnag.com/api/deploy-tracking/capistrano/) for more inform
   + Bugsnag.configuration.logger.warn "Warn message"
   + Bugsnag.configuration.logger.debug "Debug message"
   ```
+
+#### Middleware
+
+* If you previously accessed objects directly through `notification.exceptions`, this has now moved to `notification.raw_exceptions`
+
+  ```
+  class ExampleMiddleware
+    def initialize(bugsnag)
+      @bugsnag = bugsnag
+    end
+
+    def call(report)
+      exception = notification.raw_exceptions.first
+      status = exception.response.status
+      
+      # do stuff
+      
+      @bugsnag.call(report)
+    end
+  end
+  ```
